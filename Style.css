@@ -1,0 +1,31 @@
+/* Highlight style for selected apps */
+.app-selected {
+  background-color: #ddd6fe; /* Tailwind violet-200 */
+  border: 2px solid #a78bfa; /* Tailwind purple-400 */
+  border-radius: 0.5rem;
+}
+#menu-overlay {
+  border-radius: 1rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  width: 200px;
+}
+
+.icon-btn {
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 9999px;
+  padding: 0.5rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  font-size: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+.icon-btn:hover {
+  background-color: rgba(255, 255, 255, 0.4);
+}
+.unselectable {
+  user-select: none;
+}
+

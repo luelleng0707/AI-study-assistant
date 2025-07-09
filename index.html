@@ -3,11 +3,53 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>StudyFetch Clone</title>
-  <link href="./dist/output.css" rel="stylesheet">
+  <title>Productivity OS</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="style.css" />
 </head>
-<body class="bg-gray-100 text-gray-800">
-  <div id="root"></div>
-  <script src="/main.jsx" type="module"></script>
+<body class="overflow-hidden h-screen w-screen relative text-white">
+
+  <!-- 🎥 Background -->
+  <video autoplay muted loop playsinline class="fixed top-0 left-0 w-full h-full object-cover z-[-1]">
+    <source src="img/default-video.mp4" type="video/mp4" />
+  </video>
+
+  <!-- 📌 Sidebar -->
+  <div id="sidebar" class="fixed left-4 top-1/2 -translate-y-1/2 bg-white text-black 
+              rounded-2xl flex flex-col items-center py-4 px-2 shadow-lg 
+              z-30 space-y-3 max-h-[90vh] overflow-y-auto w-20">
+
+    <!-- Dynamic Buttons -->
+    <div id="sidebar-buttons" class="flex flex-col gap-3 items-center w-full">
+      <!-- Buttons dynamically added here -->
+    </div>
+
+    <!-- 3-dot toggle menu -->
+    <div class="mt-auto pt-4 border-t border-gray-300 w-full flex justify-center">
+      <button id="toggle-menu" class="text-xl">⋯</button>
+    </div>
+  </div>
+
+  <!-- ✅ Function Checklist -->
+  <div id="menu-overlay" class="hidden fixed left-24 top-1/2 -translate-y-1/2 
+              bg-white p-4 rounded-xl shadow-xl z-50 w-48 max-h-[80vh] overflow-y-auto">
+    <h3 class="font-bold mb-2">Select Functions</h3>
+    <div id="menu-list" class="flex flex-col gap-2">
+      <!-- Checklist options injected here -->
+    </div>
+  </div>
+
+  <!-- 🪟 Container for All Widgets -->
+  <div id="widget-container" class="absolute top-0 left-0 w-full h-full z-20 pointer-events-none"></div>
+
+  <!-- 📜 Scripts -->
+  <script src="script.js"></script>
+  <script src="modules/flashcards.js"></script>
+  <script src="modules/calendar.js"></script>
+  <script src="modules/upload.js"></script>
+  <script src="modules/pomodoro.js"></script>
+  <script src="modules/todo.js"></script>
+  <script src="modules/quotes.js"></script>
+
 </body>
 </html>
