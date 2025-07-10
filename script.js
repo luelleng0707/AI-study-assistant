@@ -41,22 +41,15 @@ function renderSidebarButtons() {
       btn.innerHTML = func.icon;
       btn.title = func.label;
 
-      // Apply background/border if widget is open
       const isOpen = openWidgets.some(w => w.id === id);
-      if (isOpen) {
-        btn.style.backgroundColor = theme.bg;
-        btn.style.border = `2px solid ${theme.border}`;
-      } else {
-        btn.style.backgroundColor = "transparent";
-        btn.style.border = "2px solid transparent";
-      }
+      btn.style.backgroundColor = isOpen ? theme.bg : "transparent";
+      btn.style.border = isOpen ? `2px solid ${theme.border}` : "2px solid transparent";
 
       btn.onclick = () => openWindow(func.id, func.label);
       sidebarButtons.appendChild(btn);
     }
   });
 }
-
 
 // 🎛️ Show the toggle menu list with colored cards
 function renderChecklistMenu() {
@@ -67,7 +60,7 @@ function renderChecklistMenu() {
 
     const card = document.createElement("div");
     card.className = "flex items-center gap-2 px-3 py-2 rounded-lg cursor-pointer transition hover:scale-105";
-    card.style.backgroundColor = isSelected ? theme.bg : "#F4F4F5"; // default gray
+    card.style.backgroundColor = isSelected ? theme.bg : "#F4F4F5";
     card.style.border = isSelected ? `2px solid ${theme.border}` : "2px solid transparent";
 
     const icon = document.createElement("div");
@@ -95,7 +88,6 @@ function renderChecklistMenu() {
   });
 }
 
-// 🎯 Toggle visibility of checklist menu
 document.getElementById("toggle-menu").onclick = () => {
   menuOverlay.classList.toggle("hidden");
 };
@@ -132,14 +124,12 @@ function openWindow(id, title) {
   openWidgets.push({ id, element: widget });
   layoutWidgets();
 
-  // ❌ Close widget
   header.querySelector(".close-btn").onclick = () => {
     widget.remove();
     openWidgets = openWidgets.filter(w => w.id !== id);
     layoutWidgets();
   };
 
-  // 🖱️ Make widget draggable
   let isDragging = false;
   let offsetX = 0;
   let offsetY = 0;
@@ -149,7 +139,7 @@ function openWindow(id, title) {
     const rect = widget.getBoundingClientRect();
     offsetX = e.clientX - rect.left;
     offsetY = e.clientY - rect.top;
-    widget.style.zIndex = 9999; // bring to front
+    widget.style.zIndex = 9999;
   });
 
   document.addEventListener("mouseup", () => {
@@ -157,30 +147,29 @@ function openWindow(id, title) {
   });
 
   document.addEventListener("mousemove", (e) => {
-  if (!isDragging) return;
+    if (!isDragging) return;
 
-  const widgetWidth = widget.offsetWidth;
-  const widgetHeight = widget.offsetHeight;
-  const sidebarWidth = 100;
-  const maxX = window.innerWidth - widgetWidth;
-  const maxY = window.innerHeight - widgetHeight;
+    const widgetWidth = widget.offsetWidth;
+    const widgetHeight = widget.offsetHeight;
+    const sidebarWidth = 100;
+    const maxX = window.innerWidth - widgetWidth;
+    const maxY = window.innerHeight - widgetHeight;
 
-  let newX = e.clientX - offsetX;
-  let newY = e.clientY - offsetY;
+    let newX = e.clientX - offsetX;
+    let newY = e.clientY - offsetY;
 
-  newX = Math.max(sidebarWidth + 8, Math.min(newX, maxX));
-  newY = Math.max(0, Math.min(newY, maxY));
+    newX = Math.max(sidebarWidth + 8, Math.min(newX, maxX));
+    newY = Math.max(0, Math.min(newY, maxY));
 
-  widget.style.left = `${newX}px`;
-  widget.style.top = `${newY}px`;
-});
-
+    widget.style.left = `${newX}px`;
+    widget.style.top = `${newY}px`;
+  });
 }
 
 function layoutWidgets() {
   const screenWidth = window.innerWidth;
   const screenHeight = window.innerHeight;
-  const sidebarWidth = document.getElementById("sidebar").offsetWidth + 32; // 16px margin on each side
+  const sidebarWidth = document.getElementById("sidebar").offsetWidth + 32;
   const spacing = 16;
   const maxWidth = 400;
   const maxHeight = 300;
@@ -194,17 +183,11 @@ function layoutWidgets() {
     const widgetWidth = Math.min(maxWidth, screenWidth / 2.5);
     const widgetHeight = maxHeight;
 
-    // If widget would overflow horizontally, wrap to next row
     if (x + widgetWidth + spacing > screenWidth) {
       x = sidebarWidth;
       y += rowMaxHeight + spacing;
       rowMaxHeight = 0;
     }
-
-    // If widget would overflow vertically, you can choose to:
-    // A. hide/disable opening more
-    // B. scale down others
-    // C. make scrollable container — choose what fits your style
 
     widget.style.width = `${widgetWidth}px`;
     widget.style.height = `${widgetHeight}px`;
@@ -216,15 +199,5 @@ function layoutWidgets() {
   });
 }
 
-
-// // ❌ Close window
-// function closeWindow() {
-//   appWindow.classList.add("hidden");
-// }
-
-// // ✖️ Make close button actually work
-// document.getElementById("close-btn").onclick = closeWindow;
-
-// 🟢 Initial render on load
 renderSidebarButtons();
 renderChecklistMenu();
