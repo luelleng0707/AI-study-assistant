@@ -169,33 +169,73 @@ function openWindow(id, title) {
 function layoutWidgets() {
   const screenWidth = window.innerWidth;
   const screenHeight = window.innerHeight;
-  const sidebarWidth = document.getElementById("sidebar").offsetWidth + 32;
+  const sidebar = document.getElementById("sidebar");
+  const sidebarRight = sidebar.offsetLeft + sidebar.offsetWidth + 16;
   const spacing = 16;
-  const maxWidth = 400;
-  const maxHeight = 300;
 
-  let x = sidebarWidth;
-  let y = 100;
-  let rowMaxHeight = 0;
+  const placedRects = [];
 
   openWidgets.forEach(widgetObj => {
     const widget = widgetObj.element;
-    const widgetWidth = Math.min(maxWidth, screenWidth / 2.5);
-    const widgetHeight = maxHeight;
 
-    if (x + widgetWidth + spacing > screenWidth) {
-      x = sidebarWidth;
-      y += rowMaxHeight + spacing;
-      rowMaxHeight = 0;
+    // If already positioned manually, keep its position
+    const isAlreadyPositioned = widget.style.left && widget.style.top;
+    if (isAlreadyPositioned) {
+      placedRects.push(widget.getBoundingClientRect());
+      return;
     }
 
-    widget.style.width = `${widgetWidth}px`;
-    widget.style.height = `${widgetHeight}px`;
+    const width = widget.offsetWidth || 320;
+    const height = widget.offsetHeight || 300;
+
+    let foundSpot = false;
+    let x = sidebarRight;
+    let y = spacing;
+
+    while (!foundSpot) {
+      if (y + height > screenHeight - spacing) break; // prevent off-screen bottom
+
+      while (x + width <= screenWidth - spacing) {
+        const newRect = { left: x, top: y, right: x + width, bottom: y + height };
+
+        const overlaps = placedRects.some(rect => {
+          return !(
+            newRect.right < rect.left ||
+            newRect.left > rect.right ||
+            newRect.bottom < rect.top ||
+            newRect.top > rect.bottom
+          );
+        });
+
+        if (!overlaps) {
+          foundSpot = true;
+          break;
+        }
+
+        x += spacing + 40;
+      }
+
+      if (!foundSpot) {
+        x = sidebarRight;
+        y += spacing + 40;
+      }
+    }
+
+    // Final fallback to prevent hiding if no spot found
+    if (!foundSpot) {
+      x = sidebarRight;
+      y = spacing;
+    }
+
     widget.style.left = `${x}px`;
     widget.style.top = `${y}px`;
 
-    x += widgetWidth + spacing;
-    rowMaxHeight = Math.max(rowMaxHeight, widgetHeight);
+    placedRects.push({
+      left: x,
+      top: y,
+      right: x + width,
+      bottom: y + height
+    });
   });
 }
 
