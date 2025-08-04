@@ -1,3 +1,4 @@
+(A Simplier html/css version of portible-la before migrate to React)
 A simple AI-powered study tool where you:
 - Upload textbook chapters
 - Generate flashcards + quizzes
